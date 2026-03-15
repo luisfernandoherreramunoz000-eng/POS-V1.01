@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cultura Caribe POS - Panel</title>
+    <title>Cultura Caribe POS - Acceso</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -19,97 +19,386 @@
             --border-color: #E5E7EB;
             --danger: #EF4444;
             --radius-md: 12px;
-            --radius-lg: 20px;
-            --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --radius-lg: 24px;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
-        body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-body); color: var(--text-dark); height: 100vh; overflow: hidden; display: flex; transition: background-color 0.3s;}
+        body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-body); color: var(--text-dark); height: 100vh; overflow: hidden; display: flex; }
         * { box-sizing: border-box; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        /* Loader y Pantallas */
-        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        /* Loader Profesional */
+        #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.3s; }
         .spinner { border: 4px solid var(--border-color); border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
+
+        /* Control de Pantallas */
         .app-screen { display: none; width: 100%; height: 100%; animation: fadeIn 0.4s ease; }
         .app-screen.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ================= AUTH ================= */
+        /* =========================================
+           MÓDULO 1: UI DE AUTENTICACIÓN
+           ========================================= */
         #auth-screen { justify-content: center; align-items: center; background: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2000&auto=format&fit=crop') center/cover; position: relative; }
         #auth-screen::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(17, 24, 39, 0.9) 0%, rgba(79, 70, 229, 0.8) 100%); }
-        .auth-container { background: var(--bg-surface); width: 100%; max-width: 420px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); z-index: 10; display: flex; flex-direction: column; overflow: hidden;}
-        .auth-header { padding: 40px 30px 20px; text-align: center; }
-        .auth-logo { width: 60px; height: 60px; background: var(--primary); color: white; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 15px; }
-        .auth-header h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;}
-        .auth-header p { margin: 8px 0 0; color: var(--text-muted); font-size: 14px;}
-        .auth-body { padding: 0 30px 40px; }
+        
+        .auth-container { background: var(--bg-surface); width: 100%; max-width: 450px; border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); position: relative; z-index: 10; overflow: hidden; display: flex; flex-direction: column; }
+        .auth-header { text-align: center; padding: 40px 30px 20px 30px; }
+        .auth-logo { width: 60px; height: 60px; background: var(--primary); color: white; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 15px; box-shadow: var(--shadow-md); }
+        .auth-header h2 { margin: 0; font-size: 24px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; }
+        .auth-header p { margin: 8px 0 0 0; color: var(--text-muted); font-size: 14px; }
+
+        .auth-body { padding: 0 30px 40px 30px; }
         .auth-form { display: none; animation: slideUp 0.3s ease; }
         .auth-form.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .input-group { margin-bottom: 20px; position: relative; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;}
         .input-wrapper { position: relative; }
         .input-wrapper i.icon-left { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-        .input-wrapper input, .input-wrapper select { width: 100%; padding: 14px 14px 14px 45px; border: 2px solid var(--border-color); border-radius: var(--radius-md); font-size: 15px; font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-dark); transition: 0.2s; outline: none; }
-        .input-wrapper input:focus, .input-wrapper select:focus { border-color: var(--primary); background: var(--bg-surface); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
-        
-        .btn { background: var(--primary); color: white; border: none; padding: 14px 20px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .btn-full { width: 100%; padding: 16px; font-size: 15px; }
-        .link-text { color: var(--primary); font-weight: 600; cursor: pointer; text-decoration: none; }
+        .input-wrapper input { width: 100%; padding: 14px 14px 14px 45px; border: 2px solid var(--border-color); border-radius: var(--radius-md); font-size: 15px; font-family: 'Inter', sans-serif; transition: all 0.2s; background: #F9FAFB; color: var(--text-dark); outline: none; }
+        .input-wrapper input:focus { border-color: var(--primary); background: var(--bg-surface); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+        .toggle-password { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; border: none; background: transparent; padding: 5px; }
+        .toggle-password:hover { color: var(--text-dark); }
 
-        /* ================= APP LAYOUT ================= */
-        .sidebar { width: 260px; background: var(--bg-surface); display: flex; flex-direction: column; border-right: 1px solid var(--border-color); z-index: 20; }
-        .sidebar-header { padding: 25px 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--border-color); }
-        .sidebar-logo-img { width: 45px; height: 45px; background: var(--primary); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; background-size: cover; background-position: center; flex-shrink: 0;}
-        .sidebar-title { font-weight: 800; font-size: 16px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2;}
-        
-        .nav-menu { flex: 1; padding: 20px 15px; overflow-y: auto; }
-        .nav-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 15px 0 10px 15px; }
-        .nav-item { padding: 12px 15px; border-radius: var(--radius-md); color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 12px; margin-bottom: 5px;}
-        .nav-item i { font-size: 18px; width: 20px; text-align: center; }
-        .nav-item:hover { background: var(--bg-body); color: var(--primary); }
-        .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); }
-        
-        .main-wrapper { flex: 1; display: flex; flex-direction: column; background: var(--bg-body); overflow: hidden; }
-        .top-bar { height: 75px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; background: var(--bg-body); }
-        .user-pill { background: var(--bg-surface); padding: 6px 16px 6px 6px; border-radius: 30px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-sm); font-weight: 600; font-size: 13px; border: 1px solid var(--border-color); }
-        .user-pill .avatar { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 13px; }
+        .checkbox-wrapper { display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-muted); font-weight: 500; }
+        .link-text { color: var(--primary); font-weight: 600; cursor: pointer; text-decoration: none; transition: 0.2s; }
+        .link-text:hover { color: var(--primary-hover); text-decoration: underline; }
 
-        .view { display: none; padding: 0 30px 30px; overflow-y: auto; height: calc(100vh - 75px); animation: fadeIn 0.3s ease; }
-        .view.active { display: block; }
-        .view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color);}
-        .view-header h2 { margin: 0; font-size: 24px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px;}
-
-        /* ================= COMPONENTES ================= */
-        .card { background: var(--bg-surface); border-radius: var(--radius-lg); padding: 25px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); margin-bottom: 25px;}
+        .btn-auth { background: var(--primary); color: white; border: none; padding: 16px; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; width: 100%; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+        .btn-auth:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3); }
         
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { background: var(--bg-body); padding: 14px 20px; text-align: left; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-        .data-table td { padding: 16px 20px; border-bottom: 1px solid var(--border-color); font-size: 14px; vertical-align: middle; color: var(--text-dark); font-weight: 500; }
-        .data-table tr:hover td { background: #F9FAFB; }
-        
-        .toggle-switch { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--bg-body); border-radius: var(--radius-md); margin-bottom: 15px; border: 1px solid var(--border-color); }
-        .toggle-switch label { font-weight: 600; color: var(--text-dark); font-size: 14px; margin: 0; display: flex; align-items: center; gap: 10px; cursor: pointer;}
-        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(22px); }
+        .auth-footer { text-align: center; margin-top: 25px; font-size: 14px; color: var(--text-muted); }
 
-        .img-thumbnail { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; background: var(--bg-body); display: flex; align-items: center; justify-content: center; color: var(--text-muted); border: 1px solid var(--border-color);}
+        /* =========================================
+           CÁSCARA DEL POS (SE CONSTRUIRÁ EN MÓDULO 2)
+           ========================================= */
+        /* SOLUCIÓN AL FONDO BLANCO: Se eliminó el display: none; forzado de aquí */
+        #pos-screen { flex-direction: column; background: var(--bg-body); }
         
-        .action-btn { background: var(--bg-body); border: 1px solid var(--border-color); width: 32px; height: 32px; border-radius: 8px; color: var(--text-muted); cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center;}
-        .action-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
-        .action-btn.delete:hover { background: var(--danger); border-color: var(--danger); }
+        .temp-dashboard { padding: 40px; text-align: center; margin: auto; max-width: 600px; }
+        .temp-dashboard h1 { font-size: 32px; color: var(--text-dark); margin-bottom: 10px;}
+        .temp-dashboard p { color: var(--text-muted); line-height: 1.6; margin-bottom: 30px;}
+        .btn-logout { background: white; border: 1px solid var(--border-color); padding: 12px 24px; border-radius: 8px; color: var(--danger); font-weight: 600; cursor: pointer; box-shadow: var(--shadow-md); transition: 0.2s;}
+        .btn-logout:hover { background: #FEF2F2; border-color: var(--danger); }
 
+        /* Overrides de SweetAlert para que parezca nativo */
+        .swal2-popup { font-family: 'Inter', sans-serif !important; border-radius: var(--radius-lg) !important; padding: 30px 20px !important; }
+        .swal2-title { font-weight: 800 !important; font-size: 22px !important; color: var(--text-dark) !important; }
+    </style>
+</head>
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<div id="loader"><div class="spinner"></div><p style="margin-top:20px; font-weight:600; color:var(--text-dark); font-size: 14px;" id="loader-msg">Iniciando sistema...</p></div>
+
+<div id="auth-screen" class="app-screen active">
+    <div class="auth-container">
+        <div class="auth-header">
+            <div class="auth-logo"><i class="fas fa-layer-group"></i></div>
+            <h2 id="auth-main-title">Bienvenido de vuelta</h2>
+            <p id="auth-sub-title">Ingresa a tu panel de administración</p>
+        </div>
+
+        <div class="auth-body">
+            <div id="form-login" class="auth-form active">
+                <div class="input-group">
+                    <label>Correo Electrónico</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope icon-left"></i>
+                        <input type="email" id="login-email" placeholder="admin@minegocio.com">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Contraseña</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock icon-left"></i>
+                        <input type="password" id="login-pass" placeholder="••••••••">
+                        <button class="toggle-password" onclick="toggleVisibilidad('login-pass', this)" type="button"><i class="fas fa-eye"></i></button>
+                    </div>
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-wrapper"><input type="checkbox" id="login-remember" checked> Recordar mi sesión</label>
+                    <a class="link-text" onclick="cambiarFormulario('form-forgot', 'Recuperar Acceso', 'Te enviaremos un enlace seguro')">¿Olvidaste tu clave?</a>
+                </div>
+                <button class="btn-auth" onclick="iniciarSesion()">Ingresar al Sistema <i class="fas fa-sign-in-alt"></i></button>
+                <div class="auth-footer">¿No tienes una cuenta? <a class="link-text" onclick="cambiarFormulario('form-register', 'Crea tu Negocio', 'Configura tu plataforma en segundos')">Regístrate aquí</a></div>
+            </div>
+
+            <div id="form-register" class="auth-form">
+                <div class="input-group">
+                    <label>Nombre de tu Negocio</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-store icon-left"></i>
+                        <input type="text" id="reg-nombre" placeholder="Ej: Cultura Fusión">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Correo Electrónico Administrador</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope icon-left"></i>
+                        <input type="email" id="reg-email" placeholder="tu@correo.com">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Contraseña Segura</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock icon-left"></i>
+                        <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres">
+                        <button class="toggle-password" onclick="toggleVisibilidad('reg-pass', this)" type="button"><i class="fas fa-eye"></i></button>
+                    </div>
+                </div>
+                <button class="btn-auth" onclick="registrarNegocio()">Crear Cuenta <i class="fas fa-rocket"></i></button>
+                <div class="auth-footer">¿Ya tienes cuenta? <a class="link-text" onclick="cambiarFormulario('form-login', 'Bienvenido de vuelta', 'Ingresa a tu panel de administración')">Inicia sesión</a></div>
+            </div>
+
+            <div id="form-forgot" class="auth-form">
+                <div class="input-group">
+                    <label>Correo de la cuenta</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope icon-left"></i>
+                        <input type="email" id="forgot-email" placeholder="tu@correo.com">
+                    </div>
+                </div>
+                <button class="btn-auth" onclick="recuperarContrasena()">Enviar enlace de recuperación <i class="fas fa-paper-plane"></i></button>
+                <div class="auth-footer"><a class="link-text" onclick="cambiarFormulario('form-login', 'Bienvenido de vuelta', 'Ingresa a tu panel de administración')"><i class="fas fa-arrow-left"></i> Volver al inicio</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="pos-screen" class="app-screen">
+    <div class="temp-dashboard">
+        <div style="width: 80px; height: 80px; background: var(--primary); color: white; border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 20px;"><i class="fas fa-check-circle"></i></div>
+        <h1>¡Autenticación Exitosa!</h1>
+        <p>Has entrado al sistema base. El motor de sesiones de Supabase está activo.<br><br><b>Siguiente paso:</b> Construir la interfaz completa del Punto de Venta (Catálogo, Configuración de Negocio, Tallas, etc.) tal como planeamos en el Módulo 2.</p>
+        <button class="btn-logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión Segura</button>
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // CONFIGURACIÓN DEL SERVIDOR
+    // ==========================================
+    const supabaseUrl = 'https://ftjysvnalljgvsxniemp.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ0anlzdm5hbGxqZ3ZzeG5pZW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0NDQ4MjIsImV4cCI6MjA4OTAyMDgyMn0.0Jbk81U1fCYkccgllm6zq7BDrY9XAMiZLHsBpw-DM4Y'; 
+    let db = null;
+
+    // ==========================================
+    // INICIALIZACIÓN Y PERSISTENCIA DE SESIÓN
+    // ==========================================
+    window.onload = async () => {
+        mostrarLoader(true, "Verificando credenciales...");
+        
+        try {
+            if (window.supabase) {
+                db = window.supabase.createClient(supabaseUrl, supabaseKey);
+                
+                // MAGIA: Revisar si el usuario ya tenía sesión abierta de un día anterior
+                const { data: { session }, error } = await db.auth.getSession();
+                
+                if (session) {
+                    // Si hay sesión viva, verificar si su empresa existe en la BD
+                    await validarEstructuraEmpresa(session.user);
+                } else {
+                    // No hay sesión, mostrar pantalla de Login
+                    mostrarLoader(false);
+                }
+            } else {
+                mostrarLoader(false);
+                Swal.fire('Error fatal', 'No se pudo conectar al servidor principal.', 'error');
+            }
+        } catch (err) {
+            mostrarLoader(false);
+            console.error(err);
+        }
+    };
+
+    // ==========================================
+    // INTERFAZ DE USUARIO (UI)
+    // ==========================================
+    function mostrarLoader(mostrar, mensaje = "Procesando...") {
+        document.getElementById('loader-msg').innerText = mensaje;
+        document.getElementById('loader').style.display = mostrar ? 'flex' : 'none';
+    }
+
+    function cambiarFormulario(formId, titulo, subtitulo) {
+        document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+        document.getElementById(formId).classList.add('active');
+        document.getElementById('auth-main-title').innerText = titulo;
+        document.getElementById('auth-sub-title').innerText = subtitulo;
+    }
+
+    function toggleVisibilidad(inputId, boton) {
+        const input = document.getElementById(inputId);
+        const icon = boton.querySelector('i');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    function cambiarPantalla(pantallaId) {
+        document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(pantallaId).classList.add('active');
+    }
+
+    // ==========================================
+    // LÓGICA DE NEGOCIO: REGISTRO Y LOGIN
+    // ==========================================
+
+    async function registrarNegocio() {
+        const nombre = document.getElementById('reg-nombre').value.trim();
+        const email = document.getElementById('reg-email').value.trim().toLowerCase();
+        const pass = document.getElementById('reg-pass').value;
+
+        if (!nombre || !email || !pass) return Swal.fire('Campos incompletos', 'Por favor llena todos los datos.', 'warning');
+        if (pass.length < 6) return Swal.fire('Contraseña débil', 'Usa al menos 6 caracteres.', 'warning');
+
+        mostrarLoader(true, "Creando infraestructura...");
+
+        // 1. Crear el usuario en Supabase (Esto dispara el correo de confirmación)
+        const { data, error } = await db.auth.signUp({ email: email, password: pass });
+        
+        mostrarLoader(false);
+
+        if (error) {
+            return Swal.fire('Error de Registro', error.message, 'error');
+        }
+
+        // 2. Guardar el nombre del negocio temporalmente. 
+        // ¿Por qué? Porque Supabase no lo deja escribir en la base de datos hasta que confirme el correo.
+        localStorage.setItem('temp_nombre_negocio', nombre);
+
+        // 3. Avisar al usuario
+        Swal.fire({
+            icon: 'info',
+            title: '¡Revisa tu bandeja de entrada!',
+            html: `Hemos enviado un enlace de confirmación a <b>${email}</b>.<br><br>Haz clic en el enlace de ese correo para activar tu cuenta.`,
+            confirmButtonColor: 'var(--primary)',
+            confirmButtonText: 'Entendido'
+        }).then(() => {
+            cambiarFormulario('form-login', 'Bienvenido de vuelta', 'Ingresa a tu panel de administración');
+            document.getElementById('login-email').value = email;
+            document.getElementById('reg-nombre').value = '';
+            document.getElementById('reg-pass').value = '';
+        });
+    }
+
+    async function iniciarSesion() {
+        const email = document.getElementById('login-email').value.trim().toLowerCase();
+        const pass = document.getElementById('login-pass').value;
+
+        if (!email || !pass) return Swal.fire('Atención', 'Ingresa tu correo y contraseña.', 'warning');
+
+        mostrarLoader(true, "Verificando acceso...");
+
+        // 1. Intentar iniciar sesión
+        const { data, error } = await db.auth.signInWithPassword({ email: email, password: pass });
+
+        if (error) {
+            mostrarLoader(false);
+            if(error.message.includes("Email not confirmed")) {
+                return Swal.fire('Correo sin confirmar', 'Debes hacer clic en el enlace que enviamos a tu correo antes de entrar.', 'warning');
+            }
+            return Swal.fire('Acceso denegado', 'Credenciales incorrectas.', 'error');
+        }
+
+        // 2. Validar estructura de BD
+        await validarEstructuraEmpresa(data.user);
+    }
+
+    async function validarEstructuraEmpresa(user) {
+        try {
+            // Verificar si este usuario ya tiene un registro en la tabla 'negocios'
+            const { data: negocioExistente, error: errorBusqueda } = await db.from('negocios').select('*').eq('id', user.id).single();
+
+            if (!negocioExistente) {
+                // Es su primer login después de confirmar correo. Creamos su perfil en la base de datos.
+                const nombrePendiente = localStorage.getItem('temp_nombre_negocio') || 'Mi Empresa (Editar)';
+                
+                const { error: errorInsert } = await db.from('negocios').insert([{ 
+                    id: user.id, 
+                    correo: user.email, 
+                    nombre_empresa: nombrePendiente 
+                }]);
+
+                if (errorInsert) throw new Error("Error creando perfil de empresa: " + errorInsert.message);
+                
+                // Limpiar la memoria temporal
+                localStorage.removeItem('temp_nombre_negocio');
+            }
+
+            // TODO ÉXITO: Entrar a la app
+            mostrarLoader(false);
+            cambiarPantalla('pos-screen');
+            
+            // Notificación de bienvenida elegante
+            Swal.fire({
+                icon: 'success',
+                title: 'Acceso autorizado',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000
+            });
+
+        } catch (error) {
+            mostrarLoader(false);
+            Swal.fire('Error de Integridad', error.message, 'error');
+            db.auth.signOut(); // Si falla la creación, lo desconectamos por seguridad
+        }
+    }
+
+    async function recuperarContrasena() {
+        const email = document.getElementById('forgot-email').value.trim();
+        if (!email) return Swal.fire('Atención', 'Ingresa el correo de tu cuenta.', 'warning');
+
+        mostrarLoader(true, "Enviando solicitud...");
+        
+        const { error } = await db.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.href // Para que el enlace del correo lo devuelva a tu página
+        });
+
+        mostrarLoader(false);
+
+        if (error) {
+            return Swal.fire('Error', error.message, 'error');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Enlace Enviado',
+            text: 'Revisa tu bandeja de entrada o carpeta de SPAM para restablecer tu clave.',
+            confirmButtonColor: 'var(--primary)'
+        }).then(() => {
+            cambiarFormulario('form-login', 'Bienvenido de vuelta', 'Ingresa a tu panel de administración');
+        });
+    }
+
+    async function cerrarSesion() {
+        mostrarLoader(true, "Cerrando sesión de forma segura...");
+        const { error } = await db.auth.signOut();
+        mostrarLoader(false);
+        
+        if (error) return Swal.fire('Error', 'No se pudo cerrar la sesión.', 'error');
+        
+        // Limpiar inputs por seguridad
+        document.getElementById('login-pass').value = '';
+        cambiarPantalla('auth-screen');
+    }
+</script>
+</body>
+</html>
         /* SweetAlert Styling */
         .swal2-popup { font-family: 'Inter', sans-serif !important; border-radius: var(--radius-lg) !important; padding: 30px !important; }
         
